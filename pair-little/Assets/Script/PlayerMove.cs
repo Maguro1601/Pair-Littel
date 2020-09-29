@@ -23,6 +23,10 @@ namespace UnityChan
 		public float forwardSpeed = 7.0f;
 		// 後退速度
 		public float backwardSpeed = 2.0f;
+
+
+		public float moveSpeed = 3f;
+
 		// 旋回速度
 		public float rotateSpeed = 2.0f;
 		// ジャンプ威力
@@ -32,6 +36,8 @@ namespace UnityChan
 		private Rigidbody rb;
 		// キャラクターコントローラ（カプセルコライダ）の移動量
 		private Vector3 velocity;
+		private Vector3 velocity1;
+
 		// CapsuleColliderで設定されているコライダのHeiht、Centerの初期値を収める変数
 		private float orgColHight;
 		private Vector3 orgVectColCenter;
@@ -39,6 +45,8 @@ namespace UnityChan
 		private AnimatorStateInfo currentBaseState;         // base layerで使われる、アニメーターの現在の状態の参照
 
 		private GameObject cameraObject;    // メインカメラへの参照
+
+		private CameraMove refCamera;
 
 		// アニメーター各ステートへの参照
 		static int idleState = Animator.StringToHash("Base Layer.Idle");
@@ -65,29 +73,63 @@ namespace UnityChan
 		// 以下、メイン処理.リジッドボディと絡めるので、FixedUpdate内で処理を行う.
 		void FixedUpdate()
 		{
-			float h = Input.GetAxis("Horizontal");              // 入力デバイスの水平軸をhで定義
-			float v = Input.GetAxis("Vertical");                // 入力デバイスの垂直軸をvで定義
-			anim.SetFloat("Speed", v);                          // Animator側で設定している"Speed"パラメタにvを渡す
-			anim.SetFloat("Direction", h);                      // Animator側で設定している"Direction"パラメタにhを渡す
+			float h = Input.GetAxis("Horizontal");// 入力デバイスの水平軸をhで定義
+			float v = Input.GetAxis("Vertical"); // 入力デバイスの垂直軸をvで定義
+
+			// Joy-Con
+			float h2 = Input.GetAxis("Horizontal2");
+			float v2 = Input.GetAxis("Vertical2");
+
+
+			anim.SetFloat("Speed", v2);                          // Animator側で設定している"Speed"パラメタにvを渡す
+			anim.SetFloat("Direction", h2);                      // Animator側で設定している"Direction"パラメタにhを渡す
 			anim.speed = animSpeed;                             // Animatorのモーション再生速度に animSpeedを設定する
 			currentBaseState = anim.GetCurrentAnimatorStateInfo(0); // 参照用のステート変数にBase Layer (0)の現在のステートを設定する
 			rb.useGravity = true;//ジャンプ中に重力を切るので、それ以外は重力の影響を受けるようにする
 
-
-
 			// 以下、キャラクターの移動処理
-			velocity = new Vector3(0, 0, v);        // 上下のキー入力からZ軸方向の移動量を取得
-													// キャラクターのローカル空間での方向に変換
+			velocity = new Vector3(0, 0, v2); 
 			velocity = transform.TransformDirection(velocity);
+
+			
+			velocity1 = new Vector3(h, 0, v);       
+			velocity1 = transform.TransformDirection(velocity1);
+			
 			//以下のvの閾値は、Mecanim側のトランジションと一緒に調整する
 			if (v > 0.1)
 			{
-				velocity *= forwardSpeed;       // 移動速度を掛ける
+				velocity1 *= forwardSpeed;       // 移動速度を掛ける
 			}
 			else if (v < -0.1)
 			{
-				velocity *= backwardSpeed;  // 移動速度を掛ける
+				velocity1 *= forwardSpeed;  // 移動速度を掛ける
 			}
+
+			if (h > 0.1)
+			{
+				velocity1 *= forwardSpeed;       // 移動速度を掛ける
+			}
+			else if (h < -0.1)
+			{
+				velocity1 *= forwardSpeed;  // 移動速度を掛ける
+			}
+
+
+
+			if (h2 != 0 || v2 != 0)
+			{
+				velocity = new Vector3(h2, 0, v2);
+				velocity *= forwardSpeed;
+			}
+			
+			// 上下のキー入力でキャラクターを移動させる
+			transform.localPosition += velocity * Time.fixedDeltaTime;
+
+			transform.localPosition += velocity1 * Time.fixedDeltaTime;
+
+
+
+
 
 			if (Input.GetButtonDown("Jump"))
 			{   // スペースキーを入力したら
@@ -105,11 +147,11 @@ namespace UnityChan
 			}
 
 
-			// 上下のキー入力でキャラクターを移動させる
-			transform.localPosition += velocity * Time.fixedDeltaTime;
 
-			// 左右のキー入力でキャラクタをY軸で旋回させる
-			transform.Rotate(0, h * rotateSpeed, 0);
+
+			
+			
+
 
 
 			// 以下、Animatorの各ステート中での処理
@@ -127,7 +169,7 @@ namespace UnityChan
 			// 現在のベースレイヤーがjumpStateの時
 			else if (currentBaseState.nameHash == jumpState)
 			{
-				cameraObject.SendMessage("setCameraPositionJumpView");  // ジャンプ中のカメラに変更
+				//cameraObject.SendMessage("setCameraPositionJumpView");  // ジャンプ中のカメラに変更
 																		// ステートがトランジション中でない場合
 				if (!anim.IsInTransition(0))
 				{

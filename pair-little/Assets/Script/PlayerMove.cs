@@ -48,6 +48,11 @@ namespace UnityChan
 
 		private CameraMove refCamera;
 
+		public GameObject pivot;
+		private Vector3 Pivotforward;
+		private Vector3 ido;
+
+
 		// アニメーター各ステートへの参照
 		static int idleState = Animator.StringToHash("Base Layer.Idle");
 		static int locoState = Animator.StringToHash("Base Layer.Locomotion");
@@ -67,6 +72,7 @@ namespace UnityChan
 			// CapsuleColliderコンポーネントのHeight、Centerの初期値を保存する
 			orgColHight = col.height;
 			orgVectColCenter = col.center;
+
 		}
 
 
@@ -94,7 +100,9 @@ namespace UnityChan
 			
 			velocity1 = new Vector3(h, 0, v);       
 			velocity1 = transform.TransformDirection(velocity1);
-			
+
+
+
 			//以下のvの閾値は、Mecanim側のトランジションと一緒に調整する
 			if (v > 0.1)
 			{
@@ -118,8 +126,11 @@ namespace UnityChan
 
 			if (h2 != 0 || v2 != 0)
 			{
-				velocity = new Vector3(h2, 0, v2);
-				velocity *= forwardSpeed;
+				var cameraForward = Vector3.Scale(pivot.transform.forward, new Vector3(1, 0, 1)).normalized;
+
+				velocity  = cameraForward * v2 +pivot.transform.right * h2;
+
+				velocity *=  forwardSpeed;
 			}
 			
 			// 上下のキー入力でキャラクターを移動させる

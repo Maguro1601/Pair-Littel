@@ -106,19 +106,27 @@ namespace UnityChan
 			//以下のvの閾値は、Mecanim側のトランジションと一緒に調整する
 			if (v > 0.1)
 			{
+				var cameraForward = Vector3.Scale(pivot.transform.forward, new Vector3(1, 0, 1)).normalized;
+				velocity1 = cameraForward * v + pivot.transform.right * h;
 				velocity1 *= forwardSpeed;       // 移動速度を掛ける
 			}
 			else if (v < -0.1)
 			{
+				var cameraForward = Vector3.Scale(pivot.transform.forward, new Vector3(1, 0, 1)).normalized;
+				velocity1 = cameraForward * v + pivot.transform.right * h;
 				velocity1 *= forwardSpeed;  // 移動速度を掛ける
 			}
 
 			if (h > 0.1)
 			{
+				var cameraForward = Vector3.Scale(pivot.transform.forward, new Vector3(1, 0, 1)).normalized;
+				velocity1 = cameraForward * v + pivot.transform.right * h;
 				velocity1 *= forwardSpeed;       // 移動速度を掛ける
 			}
 			else if (h < -0.1)
 			{
+				var cameraForward = Vector3.Scale(pivot.transform.forward, new Vector3(1, 0, 1)).normalized;
+				velocity1 = cameraForward * v + pivot.transform.right * h;
 				velocity1 *= forwardSpeed;  // 移動速度を掛ける
 			}
 
@@ -126,10 +134,9 @@ namespace UnityChan
 
 			if (h2 != 0 || v2 != 0)
 			{
+				
 				var cameraForward = Vector3.Scale(pivot.transform.forward, new Vector3(1, 0, 1)).normalized;
-
 				velocity  = cameraForward * v2 +pivot.transform.right * h2;
-
 				velocity *=  forwardSpeed;
 			}
 			

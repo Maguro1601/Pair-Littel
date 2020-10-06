@@ -7145,7 +7145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 539a1526cdd5fe545a7dabe04cce3fb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pivot: {fileID: 278704757}
+  pivot: {fileID: 1950819133}
 --- !u!20 &1690695501
 Camera:
   m_ObjectHideFlags: 0

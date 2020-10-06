@@ -38,7 +38,7 @@ public class CameraMove : MonoBehaviour
         float minLimit = 360 - maxLimit;
         //X軸回転
         var localAngle = transform.localEulerAngles;
-        localAngle.x += v1;
+        localAngle.x += -v1;
         if (localAngle.x > maxLimit && localAngle.x < 180)
             localAngle.x = maxLimit;
         if (localAngle.x < minLimit && localAngle.x > 180)

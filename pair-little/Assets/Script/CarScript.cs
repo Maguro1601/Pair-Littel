@@ -20,7 +20,9 @@ public class CarScript : MonoBehaviour
     {
         if (carmove == true)
         {
-            transform.position += new Vector3(0, 0, 5 * countup * Time.deltaTime);
+            Vector3 velocity=gameObject.transform.rotation*new Vector3(5,0,0);
+            gameObject.transform.position += velocity *countup* Time.deltaTime;
+            //transform.position += new Vector3(0, 0, 5 * countup * Time.deltaTime);
         }
         if (countbool == true)
         {

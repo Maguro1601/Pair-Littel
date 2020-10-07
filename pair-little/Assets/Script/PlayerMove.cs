@@ -151,17 +151,9 @@ namespace UnityChan
 
 			if (Input.GetButtonDown("Jump"))
 			{   // スペースキーを入力したら
-
-				//アニメーションのステートがLocomotionの最中のみジャンプできる
-				if (currentBaseState.nameHash == locoState)
-				{
-					//ステート遷移中でなかったらジャンプできる
-					if (!anim.IsInTransition(0))
-					{
 						rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
-						anim.SetBool("Jump", true);     // Animatorにジャンプに切り替えるフラグを送る
-					}
-				}
+						//anim.SetBool("Jump", true);     // Animatorにジャンプに切り替えるフラグを送る
+				
 			}
 
 
@@ -254,6 +246,7 @@ namespace UnityChan
 			}
 		}
 
+		/*
 		void OnGUI()
 		{
 			GUI.Box(new Rect(Screen.width - 260, 10, 250, 150), "Interaction");
@@ -264,6 +257,7 @@ namespace UnityChan
 			GUI.Label(new Rect(Screen.width - 245, 110, 250, 30), "Left Control : Front Camera");
 			GUI.Label(new Rect(Screen.width - 245, 130, 250, 30), "Alt : LookAt Camera");
 		}
+		*/
 
 
 		// キャラクターのコライダーサイズのリセット関数

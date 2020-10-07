@@ -7,8 +7,8 @@ public class HoldActionScript : MonoBehaviour
     public GameObject Target;
     private FixedJoint fixedJoint;
     private bool flag = false;
-    public AudioClip motuSE; //持つSE
-    public AudioClip hanasuSE; //離すSE
+    public AudioClip MotuSE; //持つSE
+    public AudioClip HanasuSE; //離すSE
     AudioSource audioSource;
     // Start is called before the first frame update
     void Start()
@@ -24,8 +24,8 @@ public class HoldActionScript : MonoBehaviour
         {
             Destroy(fixedJoint);
             flag = false;
-            //this.gameObject.transform.parent = null;
-            audioSource.PlayOneShot(motuSE);
+            this.gameObject.transform.parent = null;
+            AudioSource.PlayClipAtPoint(MotuSE, transform.position);
 
         }
 
@@ -49,7 +49,7 @@ public class HoldActionScript : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 Destroy(fixedJoint);
-                audioSource.PlayOneShot(hanasuSE);
+                AudioSource.PlayClipAtPoint(HanasuSE, transform.position);
                 //this.gameObject.transform.parent = null;
                 Debug.Log("AAA");
                 

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RopeActionScript : MonoBehaviour
+public class HoldActionScript : MonoBehaviour
 {
     public GameObject Target;
-    public FixedJoint fixedJoint;
-    public bool Jointflag = false;
+    private FixedJoint fixedJoint;
+    private bool flag = false;
     public AudioClip MotuSE; //持つSE
     public AudioClip HanasuSE; //離すSE
     AudioSource audioSource;
@@ -20,17 +20,14 @@ public class RopeActionScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)&&flag==true)
         {
-
             Destroy(fixedJoint);
-            AudioSource.PlayClipAtPoint(HanasuSE, transform.position);
-            
-            Debug.Log("AAA");
-            Jointflag = false;
+            flag = false;
+            this.gameObject.transform.parent = null;
+            AudioSource.PlayClipAtPoint(MotuSE, transform.position);
 
         }
-        
 
     }
 
@@ -38,30 +35,25 @@ public class RopeActionScript : MonoBehaviour
     public void OnCollisionStay(Collision collision)
     {
         //"Player"tagを取得
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Target"))
         {
-            
-            //左クリックでPlayerとJointに
+            //左クリックでTargetとJointに
             if (Input.GetMouseButtonDown(0))
             {
                 fixedJoint = gameObject.AddComponent<FixedJoint>();
                 fixedJoint.connectedBody = collision.gameObject.GetComponent<Rigidbody>();
-                Jointflag = true;
-                AudioSource.PlayClipAtPoint(MotuSE, transform.position);
-                
+                flag = true;
+                //this.gameObject.transform.parent = collision.gameObject.transform;
             }
             //右クリックでJointを解消
-            /*if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1))
             {
-                
                 Destroy(fixedJoint);
                 AudioSource.PlayClipAtPoint(HanasuSE, transform.position);
                 //this.gameObject.transform.parent = null;
                 Debug.Log("AAA");
-                Jointflag = false;
-
-            }*/
-            
+                
+            }
             //当たり判定の確認
             Debug.Log("HEllo");
         }

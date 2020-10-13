@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CountDown : MonoBehaviour
 {
@@ -18,14 +19,14 @@ public class CountDown : MonoBehaviour
 	void Start()
 	{
 		minute = 0;
-		seconds = 0f;
+		seconds = 300f;
 		oldSeconds = 0f;
 		timerText = GetComponentInChildren<Text>();
 	}
 
 	void Update()
 	{
-		seconds += Time.deltaTime;
+		seconds -= Time.deltaTime;
 		if (seconds >= 60f)
 		{
 			minute++;
@@ -37,5 +38,10 @@ public class CountDown : MonoBehaviour
 			timerText.text = minute.ToString("00") + ":" + ((int)seconds).ToString("00");
 		}
 		oldSeconds = seconds;
+		if (seconds <= 0f) 
+		{
+			SceneManager.LoadScene("gameover", LoadSceneMode.Additive);
+			seconds = 0;
+		}
 	}
 }

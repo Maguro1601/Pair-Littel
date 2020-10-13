@@ -8,6 +8,7 @@ public class CarScript : MonoBehaviour
     private bool carmove;
     private bool countbool;
     private float countup = 0.0f;
+    public AudioClip CarSE;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +23,8 @@ public class CarScript : MonoBehaviour
         {
             Vector3 velocity=gameObject.transform.rotation*new Vector3(5,0,0);
             gameObject.transform.position += velocity *countup* Time.deltaTime;
+            AudioSource.PlayClipAtPoint(CarSE, transform.position);
+            
             //transform.position += new Vector3(0, 0, 5 * countup * Time.deltaTime);
         }
         if (countbool == true)
@@ -54,5 +57,9 @@ public class CarScript : MonoBehaviour
             //当たり判定の確認
             Debug.Log("HEllo");
         }
+    }
+    public void OnCollisionEnter(Collision other)
+    {
+        carmove = false;
     }
 }

@@ -10,6 +10,13 @@ public class CGameManager : MonoBehaviourPunCallbacks
     //誰かがログインする度に生成するプレイヤーPrefab
     public GameObject playerPrefab;
     // Start is called before the first frame update
+        public override void OnJoinedRoom()
+    {
+        Debug.Log("ルームに入りました。");
+        //Mainシーンをロード
+        PhotonNetwork.LoadLevel("Main");
+    }
+
     void Start()
     {
         if (!PhotonNetwork.IsConnected)   //Phootnに接続されていなければ
@@ -20,6 +27,7 @@ public class CGameManager : MonoBehaviourPunCallbacks
         //Photonに接続していれば自プレイヤーを生成
         GameObject Player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 0f, 0f), Quaternion.identity, 0);
     }
+
 
     void OnGUI()
     {

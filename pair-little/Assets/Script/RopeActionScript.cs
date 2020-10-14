@@ -51,7 +51,7 @@ public class RopeActionScript : MonoBehaviour
                 
             }
             //右クリックでJointを解消
-            /*if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1))
             {
                 
                 Destroy(fixedJoint);
@@ -60,7 +60,7 @@ public class RopeActionScript : MonoBehaviour
                 Debug.Log("AAA");
                 Jointflag = false;
 
-            }*/
+            }
             
             //当たり判定の確認
             Debug.Log("HEllo");

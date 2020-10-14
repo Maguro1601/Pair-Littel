@@ -10,6 +10,7 @@ public class CharacterControlScript : MonoBehaviour
 	public PhotonTransformView myPTV;
 
 	private Camera mainCam;
+	
 
 	//移動処理に必要なコンポーネントを設定
 	public Animator animator;                 //モーションをコントロールするためAnimatorを取得
@@ -20,7 +21,9 @@ public class CharacterControlScript : MonoBehaviour
 	public float rotateSpeed;   //キャラクターの方向転換速度
 	public float gravity;       //キャラにかかる重力の大きさ
 	Vector3 targetDirection;        //移動する方向のベクトル
+	Vector3 targetDirection2;        //移動する方向のベクトル
 	Vector3 moveDirection = Vector3.zero;
+	Vector3 moveDirection2 = Vector3.zero;
 	// Start関数は変数を初期化するための関数
 	void Start()
 	{
@@ -29,6 +32,10 @@ public class CharacterControlScript : MonoBehaviour
 			//MainCameraのtargetにこのゲームオブジェクトを設定
 			mainCam = Camera.main;
 			mainCam.GetComponent<CCameraScript>().target = this.gameObject.transform;
+
+			
+
+
 		}
 	}
 	// Update関数は1フレームに１回実行される
@@ -44,6 +51,7 @@ public class CharacterControlScript : MonoBehaviour
 						   //最終的な移動処理
 						   //(これが無いとCharacterControllerに情報が送られないため、動けない)
 		controller.Move(moveDirection * Time.deltaTime);
+		controller.Move(moveDirection2 * Time.deltaTime);
 	}
 	void moveControl()
 	{
@@ -51,30 +59,42 @@ public class CharacterControlScript : MonoBehaviour
 		//キーボード入力を取得
 		float v = Input.GetAxisRaw("Vertical");         //InputManagerの↑↓の入力       
 		float h = Input.GetAxisRaw("Horizontal");       //InputManagerの←→の入力 
-														//カメラの正面方向ベクトルからY成分を除き、正規化してキャラが走る方向を取得
+
+		//joy-con
+		float h2 = Input.GetAxis("Horizontal2");
+		float v2 = Input.GetAxis("Vertical2");
+
+
+		//カメラの正面方向ベクトルからY成分を除き、正規化してキャラが走る方向を取得
 		Vector3 forward = Vector3.Scale(Camera.main.transform.forward, new Vector3(1, 0, 1)).normalized;
 		Vector3 right = Camera.main.transform.right; //カメラの右方向を取得
 													 //カメラの方向を考慮したキャラの進行方向を計算
 		targetDirection = h * right + v * forward;
+		targetDirection2 = h2 * right + v2 * forward;
 		//★地上にいる場合の処理
 		if (controller.isGrounded)
 		{
 			//移動のベクトルを計算
 			moveDirection = targetDirection * speed;
+			moveDirection2 = targetDirection2 * speed;
 			//Jumpボタンでジャンプ処理
 			if (Input.GetButton("Jump"))
 			{
 				moveDirection.y = jumpSpeed;
+				moveDirection2.y = jumpSpeed;
 			}
 		}
 		else        //空中操作の処理（重力加速度等）
 		{
 			float tempy = moveDirection.y;
+			float tempy2 = moveDirection2.y;
 			//(↓の２文の処理があると空中でも入力方向に動けるようになる)
 			//moveDirection = Vector3.Scale(targetDirection, new Vector3(1, 0, 1)).normalized;
 			//moveDirection *= speed;
 			moveDirection.y = tempy - gravity * Time.deltaTime;
+			moveDirection2.y = tempy2 - gravity * Time.deltaTime;
 		}
+		/*
 		//★走行アニメーション管理
 		if (v > .1 || v < -.1 || h > .1 || h < -.1) //(移動入力があると)
 		{
@@ -84,12 +104,15 @@ public class CharacterControlScript : MonoBehaviour
 		{
 			animator.SetFloat("Speed", 0f); //キャラ走行のアニメーションOFF
 		}
+		*/
 	}
 
 	void RotationControl()  //キャラクターが移動方向を変えるときの処理
 	{
 		Vector3 rotateDirection = moveDirection;
+		Vector3 rotateDirection2 = moveDirection2;
 		rotateDirection.y = 0;
+		rotateDirection2.y = 0;
 		//それなりに移動方向が変化する場合のみ移動方向を変える
 		if (rotateDirection.sqrMagnitude > 0.01)
 		{
@@ -97,6 +120,14 @@ public class CharacterControlScript : MonoBehaviour
 			float step = rotateSpeed * Time.deltaTime;
 			Vector3 newDir = Vector3.Slerp(transform.forward, rotateDirection, step);
 			transform.rotation = Quaternion.LookRotation(newDir);
+		}
+
+		if (rotateDirection2.sqrMagnitude > 0.01)
+		{
+			//緩やかに移動方向を変える
+			float step2 = rotateSpeed * Time.deltaTime;
+			Vector3 newDir2 = Vector3.Slerp(transform.forward, rotateDirection2, step2);
+			transform.rotation = Quaternion.LookRotation(newDir2);
 		}
 	}
 }

@@ -30,9 +30,7 @@ namespace UnityChan
 		// 旋回速度
 		public float rotateSpeed = 2.0f;
 		// ジャンプ威力
-		public float jumpPower = 100.0f;
-		// 二段ジャンプ防止bool
-		public bool jump = false;
+		public float jumpPower = 3.0f;
 		// キャラクターコントローラ（カプセルコライダ）の参照
 		private CapsuleCollider col;
 		private Rigidbody rb;
@@ -151,11 +149,9 @@ namespace UnityChan
 
 
 
-			if (Input.GetButtonDown("Jump")&&jump==false)
+			if (Input.GetButtonDown("Jump"))
 			{   // スペースキーを入力したら
-				rb.AddForce(Vector3.up * jumpPower,ForceMode.Impulse);
-				jump = true;
-						//rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
+						rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
 						//anim.SetBool("Jump", true);     // Animatorにジャンプに切り替えるフラグを送る
 				
 			}
@@ -271,11 +267,5 @@ namespace UnityChan
 			col.height = orgColHight;
 			col.center = orgVectColCenter;
 		}
-
-		// 二段ジャンプ防止用当たり判定
-        void OnCollisionEnter(Collision other)
-        {
-			jump = false;
-        }
-    }
+	}
 }

@@ -10,22 +10,24 @@ public class CLauncherScript : MonoBehaviourPunCallbacks
 {
     public void Connect()
     {
-        //Photonに接続できていなければ
         if (!PhotonNetwork.IsConnected)
-        {
+        {           //Photonに接続できていなければ
             PhotonNetwork.ConnectUsingSettings();   //Photonに接続する
             Debug.Log("Photonに接続しました。");
-            if (string.IsNullOrEmpty(PhotonNetwork.NickName))
-            {
-                PhotonNetwork.NickName = "player" + Random.Range(1, 99999);
-            }
-            SceneManager.LoadScene("Lobby");
         }
     }
 
-    void OnGUI()
+    public override void OnConnectedToMaster()
     {
-        //ログインの状態を画面上に出力
-        GUILayout.Label(PhotonNetwork.NetworkClientState.ToString());
+        Debug.Log("OnConnectedToMasterが呼ばれました");
+        // "room"という名前のルームに参加する（ルームが無ければ作成してから参加する）
+        PhotonNetwork.JoinOrCreateRoom("room", new RoomOptions(), TypedLobby.Default);
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("ルームに入りました。");
+        //Mainシーンをロード
+        PhotonNetwork.LoadLevel("Main");
     }
 }

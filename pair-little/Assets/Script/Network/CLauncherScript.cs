@@ -28,6 +28,6 @@ public class CLauncherScript : MonoBehaviourPunCallbacks
     {
         Debug.Log("ルームに入りました。");
         //Mainシーンをロード
-        PhotonNetwork.LoadLevel("Main");
+        PhotonNetwork.LoadLevel("Stage");
     }
 }

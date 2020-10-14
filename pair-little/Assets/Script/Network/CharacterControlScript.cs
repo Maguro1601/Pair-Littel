@@ -10,6 +10,7 @@ public class CharacterControlScript : MonoBehaviour
 	public PhotonTransformView myPTV;
 
 	private Camera mainCam;
+
 	
 
 	//移動処理に必要なコンポーネントを設定
@@ -32,9 +33,6 @@ public class CharacterControlScript : MonoBehaviour
 			//MainCameraのtargetにこのゲームオブジェクトを設定
 			mainCam = Camera.main;
 			mainCam.GetComponent<CCameraScript>().target = this.gameObject.transform;
-
-			
-
 
 		}
 	}

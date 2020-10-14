@@ -9,6 +9,7 @@ public class CGameManager : MonoBehaviourPunCallbacks
 {
     //誰かがログインする度に生成するプレイヤーPrefab
     public GameObject playerPrefab;
+    public GameObject playerPrefab2;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +19,15 @@ public class CGameManager : MonoBehaviourPunCallbacks
             return;
         }
         //Photonに接続していれば自プレイヤーを生成
-        GameObject Player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(16f, 14f, 4f), Quaternion.identity, 0);
+        if (PhotonNetwork.PlayerList.Length == 1)
+        {
+            GameObject Player = PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(16f, 14f, 4f), Quaternion.Euler(0,-90,0), 0);
+        }
+        else
+        {
+            GameObject Player2 = PhotonNetwork.Instantiate(this.playerPrefab2.name, new Vector3(16f, 14f, 4f), Quaternion.Euler(0,-90,0), 0);
+        }
+       
     }
 
     void OnGUI()
